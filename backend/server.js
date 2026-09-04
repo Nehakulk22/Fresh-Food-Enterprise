@@ -3,6 +3,11 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 
 const connectDB = require("./config/db");
+const customerRoutes = require("./routes/customerRoutes");
+const supplierRoutes = require("./routes/supplierRoutes");
+const productRoutes = require("./routes/productRoutes");
+const purchaseRoutes = require("./routes/purchaseRoutes");
+const saleRoutes = require("./routes/saleRoutes");
 
 dotenv.config();
 
@@ -37,7 +42,11 @@ app.use(
     require("./routes/authRoutes")
 );
 
-
+app.use("/api/customers", customerRoutes);
+app.use("/api/suppliers", supplierRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/purchases", purchaseRoutes);
+app.use("/api/sales",saleRoutes)
 // Server
 
 const PORT =

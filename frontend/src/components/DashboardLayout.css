@@ -1,0 +1,18 @@
+.app-layout {
+  min-height: 100vh;
+  background: #f7faf8;
+}
+
+.app-main {
+  margin-left: 245px;
+  min-height: 100vh;
+  width: calc(100% - 245px);
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    margin-left: 210px;
+    width: calc(100% - 210px);
+  }
+}
