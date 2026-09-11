@@ -1,3 +1,4 @@
+// sales
 const Sale = require("../models/Sale");
 const Product = require("../models/Product");
 
