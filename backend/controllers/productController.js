@@ -1,3 +1,4 @@
+//productcontroller
 const Product = require("../models/Product");
 
 // Get all active products
