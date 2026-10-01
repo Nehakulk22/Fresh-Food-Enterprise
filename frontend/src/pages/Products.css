@@ -1,4 +1,3 @@
-
 .products-page {
   min-height: 100vh;
   padding: 30px;
@@ -84,7 +83,7 @@
   color: #374151;
   border-radius: 7px;
   font-size: 22px;
-  cursor: pointer ;
+  cursor: pointer;
 }
 
 .product-form-grid {

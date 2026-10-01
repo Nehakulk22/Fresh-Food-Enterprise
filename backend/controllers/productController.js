@@ -1,5 +1,5 @@
-//productcontroller
 const Product = require("../models/Product");
+const logActivity = require("../utils/activityLogger");
 
 // Get all active products
 const getProducts = async (req, res) => {
@@ -67,7 +67,10 @@ const createProduct = async (req, res) => {
       });
     }
 
-    if (Number(purchasePrice) < 0 || Number(sellingPrice) < 0) {
+    if (
+      Number(purchasePrice) < 0 ||
+      Number(sellingPrice) < 0
+    ) {
       return res.status(400).json({
         message: "Prices cannot be negative",
       });
@@ -91,10 +94,28 @@ const createProduct = async (req, res) => {
       notes,
     });
 
-    const populatedProduct = await Product.findById(product._id).populate(
-      "supplier",
-      "name"
-    );
+    const populatedProduct =
+      await Product.findById(product._id).populate(
+        "supplier",
+        "name"
+      );
+
+    await logActivity({
+      userId: req.user?._id,
+      staffName: req.user?.name,
+      staffEmail: req.user?.email,
+      module: "Product",
+      action: "CREATE",
+      description: `Created product ${product.name}`,
+      recordId: product._id,
+      recordType: "Product",
+      endpoint: req.originalUrl,
+      method: req.method,
+      metadata: {
+        category: product.category,
+        quantity: product.quantity,
+      },
+    });
 
     res.status(201).json({
       message: "Product created successfully",
@@ -134,19 +155,28 @@ const updateProduct = async (req, res) => {
       });
     }
 
-    if (purchasePrice !== undefined && Number(purchasePrice) < 0) {
+    if (
+      purchasePrice !== undefined &&
+      Number(purchasePrice) < 0
+    ) {
       return res.status(400).json({
         message: "Purchase price cannot be negative",
       });
     }
 
-    if (sellingPrice !== undefined && Number(sellingPrice) < 0) {
+    if (
+      sellingPrice !== undefined &&
+      Number(sellingPrice) < 0
+    ) {
       return res.status(400).json({
         message: "Selling price cannot be negative",
       });
     }
 
-    if (quantity !== undefined && Number(quantity) < 0) {
+    if (
+      quantity !== undefined &&
+      Number(quantity) < 0
+    ) {
       return res.status(400).json({
         message: "Quantity cannot be negative",
       });
@@ -155,30 +185,58 @@ const updateProduct = async (req, res) => {
     product.name = name ?? product.name;
     product.category = category ?? product.category;
     product.unit = unit ?? product.unit;
+
     product.purchasePrice =
       purchasePrice !== undefined
         ? Number(purchasePrice)
         : product.purchasePrice;
+
     product.sellingPrice =
       sellingPrice !== undefined
         ? Number(sellingPrice)
         : product.sellingPrice;
+
     product.quantity =
-      quantity !== undefined ? Number(quantity) : product.quantity;
+      quantity !== undefined
+        ? Number(quantity)
+        : product.quantity;
+
     product.lowStockThreshold =
       lowStockThreshold !== undefined
         ? Number(lowStockThreshold)
         : product.lowStockThreshold;
+
     product.supplier =
-      supplier !== undefined ? supplier || null : product.supplier;
+      supplier !== undefined
+        ? supplier || null
+        : product.supplier;
+
     product.notes = notes ?? product.notes;
 
     await product.save();
 
-    const updatedProduct = await Product.findById(product._id).populate(
-      "supplier",
-      "name"
-    );
+    const updatedProduct =
+      await Product.findById(product._id).populate(
+        "supplier",
+        "name"
+      );
+
+    await logActivity({
+      userId: req.user?._id,
+      staffName: req.user?.name,
+      staffEmail: req.user?.email,
+      module: "Product",
+      action: "UPDATE",
+      description: `Updated product ${product.name}`,
+      recordId: product._id,
+      recordType: "Product",
+      endpoint: req.originalUrl,
+      method: req.method,
+      metadata: {
+        category: product.category,
+        quantity: product.quantity,
+      },
+    });
 
     res.status(200).json({
       message: "Product updated successfully",
@@ -192,7 +250,7 @@ const updateProduct = async (req, res) => {
   }
 };
 
-// Delete product (soft delete)
+// Delete product
 const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findOne({
@@ -207,7 +265,21 @@ const deleteProduct = async (req, res) => {
     }
 
     product.isActive = false;
+
     await product.save();
+
+    await logActivity({
+      userId: req.user?._id,
+      staffName: req.user?.name,
+      staffEmail: req.user?.email,
+      module: "Product",
+      action: "DELETE",
+      description: `Deleted product ${product.name}`,
+      recordId: product._id,
+      recordType: "Product",
+      endpoint: req.originalUrl,
+      method: req.method,
+    });
 
     res.status(200).json({
       message: "Product deleted successfully",

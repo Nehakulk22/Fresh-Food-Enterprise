@@ -1,4 +1,3 @@
-//product.js
 const express = require("express");
 
 const {
@@ -9,7 +8,11 @@ const {
   deleteProduct,
 } = require("../controllers/productController");
 
+const optionalAuth = require("../middleware/optionalAuth");
+
 const router = express.Router();
+
+router.use(optionalAuth);
 
 router.get("/", getProducts);
 
