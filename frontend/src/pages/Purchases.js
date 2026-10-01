@@ -26,9 +26,29 @@ function Purchases() {
     },
   ]);
 
+  // ======================================================
+  // AUTH HEADERS
+  // ======================================================
+
+  const getHeaders = () => {
+    const token = localStorage.getItem("token");
+
+    return {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+  };
+
+  // ======================================================
+  // FETCH PURCHASES
+  // ======================================================
+
   const fetchPurchases = async () => {
     try {
-      const response = await fetch(`${API_URL}/purchases`);
+      const response = await fetch(`${API_URL}/purchases`, {
+        headers: getHeaders(),
+      });
+
       const data = await response.json();
 
       if (response.ok) {
@@ -39,9 +59,16 @@ function Purchases() {
     }
   };
 
+  // ======================================================
+  // FETCH PRODUCTS
+  // ======================================================
+
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`${API_URL}/products`);
+      const response = await fetch(`${API_URL}/products`, {
+        headers: getHeaders(),
+      });
+
       const data = await response.json();
 
       if (response.ok) {
@@ -52,9 +79,16 @@ function Purchases() {
     }
   };
 
+  // ======================================================
+  // FETCH SUPPLIERS
+  // ======================================================
+
   const fetchSuppliers = async () => {
     try {
-      const response = await fetch(`${API_URL}/suppliers`);
+      const response = await fetch(`${API_URL}/suppliers`, {
+        headers: getHeaders(),
+      });
+
       const data = await response.json();
 
       if (response.ok) {
@@ -71,12 +105,20 @@ function Purchases() {
     fetchSuppliers();
   }, []);
 
+  // ======================================================
+  // HANDLE FORM CHANGE
+  // ======================================================
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
+
+  // ======================================================
+  // HANDLE ITEM CHANGE
+  // ======================================================
 
   const handleItemChange = (index, field, value) => {
     const updatedItems = [...items];
@@ -97,6 +139,10 @@ function Purchases() {
     setItems(updatedItems);
   };
 
+  // ======================================================
+  // ADD ITEM
+  // ======================================================
+
   const addItem = () => {
     setItems([
       ...items,
@@ -108,13 +154,23 @@ function Purchases() {
     ]);
   };
 
+  // ======================================================
+  // REMOVE ITEM
+  // ======================================================
+
   const removeItem = (index) => {
     if (items.length === 1) {
       return;
     }
 
-    setItems(items.filter((_, itemIndex) => itemIndex !== index));
+    setItems(
+      items.filter((_, itemIndex) => itemIndex !== index)
+    );
   };
+
+  // ======================================================
+  // ITEM TOTAL
+  // ======================================================
 
   const getItemTotal = (item) => {
     return (
@@ -123,6 +179,10 @@ function Purchases() {
     );
   };
 
+  // ======================================================
+  // TOTAL AMOUNT
+  // ======================================================
+
   const getTotalAmount = () => {
     return items.reduce(
       (total, item) => total + getItemTotal(item),
@@ -130,12 +190,20 @@ function Purchases() {
     );
   };
 
+  // ======================================================
+  // PENDING AMOUNT
+  // ======================================================
+
   const getPendingAmount = () => {
     return (
       getTotalAmount() -
       Number(formData.paidAmount || 0)
     );
   };
+
+  // ======================================================
+  // RESET FORM
+  // ======================================================
 
   const resetForm = () => {
     setFormData({
@@ -156,6 +224,10 @@ function Purchases() {
 
     setShowForm(false);
   };
+
+  // ======================================================
+  // CREATE PURCHASE
+  // ======================================================
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -197,9 +269,7 @@ function Purchases() {
     try {
       const response = await fetch(`${API_URL}/purchases`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getHeaders(),
         body: JSON.stringify({
           invoiceNumber: formData.invoiceNumber,
           supplier: formData.supplier,
@@ -224,12 +294,17 @@ function Purchases() {
       alert("Purchase created successfully");
 
       resetForm();
+
       fetchPurchases();
       fetchProducts();
     } catch (error) {
       alert("Unable to connect to server");
     }
   };
+
+  // ======================================================
+  // DELETE PURCHASE
+  // ======================================================
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm(
@@ -245,6 +320,7 @@ function Purchases() {
         `${API_URL}/purchases/${id}`,
         {
           method: "DELETE",
+          headers: getHeaders(),
         }
       );
 
@@ -266,7 +342,9 @@ function Purchases() {
 
   return (
     <div className="purchases-page">
+
       <div className="purchases-header">
+
         <div>
           <h1>Purchases</h1>
           <p>Manage purchases and supplier transactions</p>
@@ -280,11 +358,14 @@ function Purchases() {
             + Add Purchase
           </button>
         )}
+
       </div>
 
       {showForm && (
         <div className="purchase-form-card">
+
           <div className="purchase-form-header">
+
             <div>
               <h2>Add Purchase</h2>
               <p>Record a new purchase transaction</p>
@@ -296,11 +377,15 @@ function Purchases() {
             >
               ×
             </button>
+
           </div>
 
           <form onSubmit={handleSubmit}>
+
             <div className="purchase-basic-grid">
+
               <div className="purchase-form-group">
+
                 <label>
                   Invoice Number <span>*</span>
                 </label>
@@ -312,9 +397,11 @@ function Purchases() {
                   onChange={handleChange}
                   placeholder="Enter invoice number"
                 />
+
               </div>
 
               <div className="purchase-form-group">
+
                 <label>
                   Supplier <span>*</span>
                 </label>
@@ -324,7 +411,10 @@ function Purchases() {
                   value={formData.supplier}
                   onChange={handleChange}
                 >
-                  <option value="">Select supplier</option>
+
+                  <option value="">
+                    Select supplier
+                  </option>
 
                   {suppliers.map((supplier) => (
                     <option
@@ -334,10 +424,13 @@ function Purchases() {
                       {supplier.name}
                     </option>
                   ))}
+
                 </select>
+
               </div>
 
               <div className="purchase-form-group">
+
                 <label>
                   Purchase Date <span>*</span>
                 </label>
@@ -348,11 +441,15 @@ function Purchases() {
                   value={formData.purchaseDate}
                   onChange={handleChange}
                 />
+
               </div>
+
             </div>
 
             <div className="purchase-items-section">
+
               <div className="purchase-items-header">
+
                 <h3>Products</h3>
 
                 <button
@@ -362,14 +459,18 @@ function Purchases() {
                 >
                   + Add Product
                 </button>
+
               </div>
 
               {items.map((item, index) => (
+
                 <div
                   className="purchase-item-row"
                   key={index}
                 >
+
                   <div className="purchase-form-group product-field">
+
                     <label>Product</label>
 
                     <select
@@ -382,6 +483,7 @@ function Purchases() {
                         )
                       }
                     >
+
                       <option value="">
                         Select product
                       </option>
@@ -394,10 +496,13 @@ function Purchases() {
                           {product.name}
                         </option>
                       ))}
+
                     </select>
+
                   </div>
 
                   <div className="purchase-form-group">
+
                     <label>Quantity</label>
 
                     <input
@@ -414,9 +519,11 @@ function Purchases() {
                       }
                       placeholder="0"
                     />
+
                   </div>
 
                   <div className="purchase-form-group">
+
                     <label>Purchase Price</label>
 
                     <input
@@ -433,13 +540,17 @@ function Purchases() {
                       }
                       placeholder="0.00"
                     />
+
                   </div>
 
                   <div className="item-total">
+
                     <label>Total</label>
+
                     <strong>
                       ₹{getItemTotal(item).toFixed(2)}
                     </strong>
+
                   </div>
 
                   <button
@@ -449,20 +560,27 @@ function Purchases() {
                   >
                     ×
                   </button>
+
                 </div>
+
               ))}
+
             </div>
 
             <div className="purchase-payment-section">
+
               <div className="purchase-summary">
+
                 <div>
                   <span>Total Amount</span>
+
                   <strong>
                     ₹{getTotalAmount().toFixed(2)}
                   </strong>
                 </div>
 
                 <div>
+
                   <span>Paid Amount</span>
 
                   <input
@@ -474,18 +592,28 @@ function Purchases() {
                     onChange={handleChange}
                     placeholder="0.00"
                   />
+
                 </div>
 
                 <div className="pending-row">
+
                   <span>Pending Amount</span>
+
                   <strong>
-                    ₹{Math.max(getPendingAmount(), 0).toFixed(2)}
+                    ₹{Math.max(
+                      getPendingAmount(),
+                      0
+                    ).toFixed(2)}
                   </strong>
+
                 </div>
+
               </div>
+
             </div>
 
             <div className="purchase-form-group notes-group">
+
               <label>Notes</label>
 
               <textarea
@@ -495,9 +623,11 @@ function Purchases() {
                 placeholder="Additional notes"
                 rows="3"
               />
+
             </div>
 
             <div className="purchase-form-actions">
+
               <button
                 type="button"
                 className="cancel-purchase-btn"
@@ -512,23 +642,35 @@ function Purchases() {
               >
                 Save Purchase
               </button>
+
             </div>
+
           </form>
+
         </div>
       )}
 
       <div className="purchases-card">
+
         <div className="purchases-card-header">
+
           <div>
             <h2>Purchase History</h2>
             <p>{purchases.length} purchase(s)</p>
           </div>
+
         </div>
 
         {purchases.length === 0 ? (
+
           <div className="empty-purchases">
-            <div className="empty-purchase-icon">🧾</div>
+
+            <div className="empty-purchase-icon">
+              🧾
+            </div>
+
             <h3>No Purchases Found</h3>
+
             <p>
               Add your first purchase transaction to get started.
             </p>
@@ -541,11 +683,17 @@ function Purchases() {
                 + Add Purchase
               </button>
             )}
+
           </div>
+
         ) : (
+
           <div className="purchase-table-container">
+
             <table className="purchases-table">
+
               <thead>
+
                 <tr>
                   <th>Invoice</th>
                   <th>Date</th>
@@ -557,11 +705,15 @@ function Purchases() {
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
+
               </thead>
 
               <tbody>
+
                 {purchases.map((purchase) => (
+
                   <tr key={purchase._id}>
+
                     <td>
                       <strong>
                         {purchase.invoiceNumber}
@@ -601,14 +753,17 @@ function Purchases() {
                     </td>
 
                     <td>
+
                       <span
                         className={`purchase-status ${purchase.paymentStatus.toLowerCase()}`}
                       >
                         {purchase.paymentStatus}
                       </span>
+
                     </td>
 
                     <td>
+
                       <button
                         className="delete-purchase-btn"
                         onClick={() =>
@@ -617,14 +772,23 @@ function Purchases() {
                       >
                         Delete
                       </button>
+
                     </td>
+
                   </tr>
+
                 ))}
+
               </tbody>
+
             </table>
+
           </div>
+
         )}
+
       </div>
+
     </div>
   );
 }

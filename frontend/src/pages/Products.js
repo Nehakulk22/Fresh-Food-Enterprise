@@ -1,4 +1,3 @@
-//product.js sample
 import React, { useEffect, useState } from "react";
 import "./Products.css";
 
@@ -23,9 +22,29 @@ function Products() {
     notes: "",
   });
 
+  // ======================================================
+  // AUTH HEADERS
+  // ======================================================
+
+  const getHeaders = () => {
+    const token = localStorage.getItem("token");
+
+    return {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+  };
+
+  // ======================================================
+  // FETCH PRODUCTS
+  // ======================================================
+
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`${API_URL}/products`);
+      const response = await fetch(`${API_URL}/products`, {
+        headers: getHeaders(),
+      });
+
       const data = await response.json();
 
       if (response.ok) {
@@ -38,9 +57,16 @@ function Products() {
     }
   };
 
+  // ======================================================
+  // FETCH SUPPLIERS
+  // ======================================================
+
   const fetchSuppliers = async () => {
     try {
-      const response = await fetch(`${API_URL}/suppliers`);
+      const response = await fetch(`${API_URL}/suppliers`, {
+        headers: getHeaders(),
+      });
+
       const data = await response.json();
 
       if (response.ok) {
@@ -56,12 +82,20 @@ function Products() {
     fetchSuppliers();
   }, []);
 
+  // ======================================================
+  // HANDLE CHANGE
+  // ======================================================
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
+
+  // ======================================================
+  // RESET FORM
+  // ======================================================
 
   const resetForm = () => {
     setFormData({
@@ -79,6 +113,10 @@ function Products() {
     setEditingId(null);
     setShowForm(false);
   };
+
+  // ======================================================
+  // CREATE / UPDATE PRODUCT
+  // ======================================================
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -114,7 +152,9 @@ function Products() {
       purchasePrice: Number(formData.purchasePrice),
       sellingPrice: Number(formData.sellingPrice),
       quantity: Number(formData.quantity || 0),
-      lowStockThreshold: Number(formData.lowStockThreshold || 5),
+      lowStockThreshold: Number(
+        formData.lowStockThreshold || 5
+      ),
       supplier: formData.supplier || null,
       notes: formData.notes,
     };
@@ -126,9 +166,7 @@ function Products() {
 
       const response = await fetch(url, {
         method: editingId ? "PUT" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getHeaders(),
         body: JSON.stringify(productData),
       });
 
@@ -152,6 +190,10 @@ function Products() {
     }
   };
 
+  // ======================================================
+  // EDIT PRODUCT
+  // ======================================================
+
   const handleEdit = (product) => {
     setFormData({
       name: product.name || "",
@@ -160,7 +202,8 @@ function Products() {
       purchasePrice: product.purchasePrice ?? "",
       sellingPrice: product.sellingPrice ?? "",
       quantity: product.quantity ?? "",
-      lowStockThreshold: product.lowStockThreshold ?? "5",
+      lowStockThreshold:
+        product.lowStockThreshold ?? "5",
       supplier: product.supplier?._id || "",
       notes: product.notes || "",
     });
@@ -174,6 +217,10 @@ function Products() {
     });
   };
 
+  // ======================================================
+  // DELETE PRODUCT
+  // ======================================================
+
   const handleDelete = async (id) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this product?"
@@ -184,9 +231,13 @@ function Products() {
     }
 
     try {
-      const response = await fetch(`${API_URL}/products/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${API_URL}/products/${id}`,
+        {
+          method: "DELETE",
+          headers: getHeaders(),
+        }
+      );
 
       const data = await response.json();
 
@@ -205,7 +256,9 @@ function Products() {
 
   return (
     <div className="products-page">
+
       <div className="products-header">
+
         <div>
           <h1>Products</h1>
           <p>Manage your products and stock</p>
@@ -219,13 +272,21 @@ function Products() {
             + Add Product
           </button>
         )}
+
       </div>
 
       {showForm && (
         <div className="product-form-card">
+
           <div className="form-card-header">
+
             <div>
-              <h2>{editingId ? "Edit Product" : "Add Product"}</h2>
+              <h2>
+                {editingId
+                  ? "Edit Product"
+                  : "Add Product"}
+              </h2>
+
               <p>
                 {editingId
                   ? "Update product information"
@@ -239,11 +300,15 @@ function Products() {
             >
               ×
             </button>
+
           </div>
 
           <form onSubmit={handleSubmit}>
+
             <div className="product-form-grid">
+
               <div className="form-group">
+
                 <label>
                   Product Name <span>*</span>
                 </label>
@@ -255,9 +320,11 @@ function Products() {
                   onChange={handleChange}
                   placeholder="Enter product name"
                 />
+
               </div>
 
               <div className="form-group">
+
                 <label>
                   Category <span>*</span>
                 </label>
@@ -269,9 +336,11 @@ function Products() {
                   onChange={handleChange}
                   placeholder="e.g. Dairy, Bakery"
                 />
+
               </div>
 
               <div className="form-group">
+
                 <label>
                   Unit <span>*</span>
                 </label>
@@ -281,19 +350,49 @@ function Products() {
                   value={formData.unit}
                   onChange={handleChange}
                 >
-                  <option value="">Select unit</option>
-                  <option value="kg">Kilogram (kg)</option>
-                  <option value="gram">Gram (g)</option>
-                  <option value="litre">Litre (L)</option>
-                  <option value="ml">Millilitre (ml)</option>
-                  <option value="piece">Piece</option>
-                  <option value="packet">Packet</option>
-                  <option value="box">Box</option>
-                  <option value="dozen">Dozen</option>
+
+                  <option value="">
+                    Select unit
+                  </option>
+
+                  <option value="kg">
+                    Kilogram (kg)
+                  </option>
+
+                  <option value="gram">
+                    Gram (g)
+                  </option>
+
+                  <option value="litre">
+                    Litre (L)
+                  </option>
+
+                  <option value="ml">
+                    Millilitre (ml)
+                  </option>
+
+                  <option value="piece">
+                    Piece
+                  </option>
+
+                  <option value="packet">
+                    Packet
+                  </option>
+
+                  <option value="box">
+                    Box
+                  </option>
+
+                  <option value="dozen">
+                    Dozen
+                  </option>
+
                 </select>
+
               </div>
 
               <div className="form-group">
+
                 <label>
                   Purchase Price <span>*</span>
                 </label>
@@ -307,9 +406,11 @@ function Products() {
                   min="0"
                   step="0.01"
                 />
+
               </div>
 
               <div className="form-group">
+
                 <label>
                   Selling Price <span>*</span>
                 </label>
@@ -323,9 +424,11 @@ function Products() {
                   min="0"
                   step="0.01"
                 />
+
               </div>
 
               <div className="form-group">
+
                 <label>Current Quantity</label>
 
                 <input
@@ -337,10 +440,14 @@ function Products() {
                   min="0"
                   step="0.01"
                 />
+
               </div>
 
               <div className="form-group">
-                <label>Low Stock Threshold</label>
+
+                <label>
+                  Low Stock Threshold
+                </label>
 
                 <input
                   type="number"
@@ -351,9 +458,11 @@ function Products() {
                   min="0"
                   step="0.01"
                 />
+
               </div>
 
               <div className="form-group">
+
                 <label>Supplier</label>
 
                 <select
@@ -361,7 +470,10 @@ function Products() {
                   value={formData.supplier}
                   onChange={handleChange}
                 >
-                  <option value="">Select supplier</option>
+
+                  <option value="">
+                    Select supplier
+                  </option>
 
                   {suppliers.map((supplier) => (
                     <option
@@ -371,10 +483,13 @@ function Products() {
                       {supplier.name}
                     </option>
                   ))}
+
                 </select>
+
               </div>
 
               <div className="form-group full-width">
+
                 <label>Notes</label>
 
                 <textarea
@@ -384,10 +499,13 @@ function Products() {
                   placeholder="Additional product information"
                   rows="3"
                 />
+
               </div>
+
             </div>
 
             <div className="form-actions">
+
               <button
                 type="button"
                 className="cancel-btn"
@@ -400,26 +518,42 @@ function Products() {
                 type="submit"
                 className="save-product-btn"
               >
-                {editingId ? "Update Product" : "Save Product"}
+                {editingId
+                  ? "Update Product"
+                  : "Save Product"}
               </button>
+
             </div>
+
           </form>
+
         </div>
       )}
 
       <div className="products-card">
+
         <div className="products-card-header">
+
           <div>
             <h2>Product List</h2>
             <p>{products.length} product(s)</p>
           </div>
+
         </div>
 
         {products.length === 0 ? (
+
           <div className="empty-products">
-            <div className="empty-icon">📦</div>
+
+            <div className="empty-icon">
+              📦
+            </div>
+
             <h3>No Products Found</h3>
-            <p>Add your first product to start managing your inventory.</p>
+
+            <p>
+              Add your first product to start managing your inventory.
+            </p>
 
             {!showForm && (
               <button
@@ -429,11 +563,17 @@ function Products() {
                 + Add Product
               </button>
             )}
+
           </div>
+
         ) : (
+
           <div className="table-container">
+
             <table className="products-table">
+
               <thead>
+
                 <tr>
                   <th>Product</th>
                   <th>Category</th>
@@ -445,33 +585,50 @@ function Products() {
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
+
               </thead>
 
               <tbody>
+
                 {products.map((product) => {
+
                   const isLowStock =
                     Number(product.quantity) <=
                     Number(product.lowStockThreshold);
 
                   return (
                     <tr key={product._id}>
-                      <td>
-                        <strong>{product.name}</strong>
-                      </td>
-
-                      <td>{product.category}</td>
-
-                      <td>{product.unit}</td>
 
                       <td>
-                        ₹{Number(product.purchasePrice).toFixed(2)}
+                        <strong>
+                          {product.name}
+                        </strong>
                       </td>
 
                       <td>
-                        ₹{Number(product.sellingPrice).toFixed(2)}
+                        {product.category}
                       </td>
 
                       <td>
+                        {product.unit}
+                      </td>
+
+                      <td>
+                        ₹
+                        {Number(
+                          product.purchasePrice
+                        ).toFixed(2)}
+                      </td>
+
+                      <td>
+                        ₹
+                        {Number(
+                          product.sellingPrice
+                        ).toFixed(2)}
+                      </td>
+
+                      <td>
+
                         <span
                           className={
                             isLowStock
@@ -479,31 +636,44 @@ function Products() {
                               : "stock-normal"
                           }
                         >
-                          {product.quantity} {product.unit}
+                          {product.quantity}{" "}
+                          {product.unit}
                         </span>
+
                       </td>
 
                       <td>
-                        {product.supplier?.name || "—"}
+                        {product.supplier?.name ||
+                          "—"}
                       </td>
 
                       <td>
+
                         {isLowStock ? (
+
                           <span className="status-badge low">
                             Low Stock
                           </span>
+
                         ) : (
+
                           <span className="status-badge available">
                             Available
                           </span>
+
                         )}
+
                       </td>
 
                       <td>
+
                         <div className="action-buttons">
+
                           <button
                             className="edit-btn"
-                            onClick={() => handleEdit(product)}
+                            onClick={() =>
+                              handleEdit(product)
+                            }
                           >
                             Edit
                           </button>
@@ -511,21 +681,32 @@ function Products() {
                           <button
                             className="delete-btn"
                             onClick={() =>
-                              handleDelete(product._id)
+                              handleDelete(
+                                product._id
+                              )
                             }
                           >
                             Delete
                           </button>
+
                         </div>
+
                       </td>
+
                     </tr>
                   );
                 })}
+
               </tbody>
+
             </table>
+
           </div>
+
         )}
+
       </div>
+
     </div>
   );
 }
