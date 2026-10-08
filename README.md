@@ -3,7 +3,7 @@
  Fresh Food Enterprise is a full-stack web-based business management system developed for Fresh Food Enterprises. The system is designed to manage daily business operations such as customers, suppliers, products, purchases, sales, payments, and pending amounts in a centralized and organized manner.
 
 ## Project Overview
-
+-
  Fresh Food Enterpriser provides a simple and efficient platform for managing fresh food business activities. It reduces manual record-keeping and helps maintain accurate transaction and business information.
 
 The system consists of a React-based frontend, a Node.js and Express.js backend, and MongoDB for database management.
