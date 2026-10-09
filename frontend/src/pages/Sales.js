@@ -1,3 +1,4 @@
+// Sales.js
 import React, { useEffect, useState } from "react";
 
 const API_URL = "http://localhost:8000/api";

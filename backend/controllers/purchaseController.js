@@ -1,5 +1,6 @@
 const Purchase = require("../models/Purchase");
 const Product = require("../models/Product");
+const logActivity = require("../utils/activityLogger");
 
 // Get all purchases
 const getPurchases = async (req, res) => {
@@ -52,7 +53,12 @@ const createPurchase = async (req, res) => {
       notes,
     } = req.body;
 
-    if (!invoiceNumber || !supplier || !purchaseDate || !items?.length) {
+    if (
+      !invoiceNumber ||
+      !supplier ||
+      !purchaseDate ||
+      !items?.length
+    ) {
       return res.status(400).json({
         message: "Please fill all required fields",
       });
@@ -73,7 +79,11 @@ const createPurchase = async (req, res) => {
     const processedItems = [];
 
     for (const item of items) {
-      if (!item.product || !item.quantity || item.quantity <= 0) {
+      if (
+        !item.product ||
+        !item.quantity ||
+        item.quantity <= 0
+      ) {
         return res.status(400).json({
           message: "Invalid product quantity",
         });
@@ -100,7 +110,8 @@ const createPurchase = async (req, res) => {
       }
 
       const itemTotal =
-        Number(item.quantity) * Number(item.purchasePrice);
+        Number(item.quantity) *
+        Number(item.purchasePrice);
 
       totalAmount += itemTotal;
 
@@ -126,7 +137,7 @@ const createPurchase = async (req, res) => {
       });
     }
 
-    // Pending amount = Total Amount - Paid Amount
+    // Pending Amount = Total Amount - Paid Amount
     const pendingAmount = totalAmount - paid;
 
     let paymentStatus = "Pending";
@@ -149,18 +160,46 @@ const createPurchase = async (req, res) => {
       notes,
     });
 
-    // Increase product stock
+    // Increase stock
     for (const item of processedItems) {
-      await Product.findByIdAndUpdate(item.product, {
-        $inc: {
-          quantity: item.quantity,
-        },
-      });
+      await Product.findByIdAndUpdate(
+        item.product,
+        {
+          $inc: {
+            quantity: item.quantity,
+          },
+        }
+      );
     }
 
-    const populatedPurchase = await Purchase.findById(purchase._id)
-      .populate("supplier", "name phone")
-      .populate("items.product", "name unit");
+    const populatedPurchase =
+      await Purchase.findById(purchase._id)
+        .populate("supplier", "name phone")
+        .populate("items.product", "name unit");
+
+    // STAFF ACTIVITY
+    await logActivity({
+      userId: req.user?._id,
+      staffName: req.user?.name,
+      staffEmail: req.user?.email,
+      module: "Purchase",
+      action: "CREATE",
+      description: `Created purchase ${purchase.invoiceNumber}`,
+      recordId: purchase._id,
+      recordType: "Purchase",
+      invoiceNumber: purchase.invoiceNumber,
+      amount: purchase.totalAmount,
+      endpoint: req.originalUrl,
+      method: req.method,
+      metadata: {
+        supplierName:
+          populatedPurchase.supplier?.name || "",
+        paidAmount: purchase.paidAmount,
+        pendingAmount: purchase.pendingAmount,
+        paymentStatus: purchase.paymentStatus,
+        itemCount: purchase.items.length,
+      },
+    });
 
     res.status(201).json({
       message: "Purchase created successfully",
@@ -185,16 +224,39 @@ const deletePurchase = async (req, res) => {
       });
     }
 
-    // Reverse stock when purchase is deleted
+    // Reverse stock
     for (const item of purchase.items) {
-      await Product.findByIdAndUpdate(item.product, {
-        $inc: {
-          quantity: -item.quantity,
-        },
-      });
+      await Product.findByIdAndUpdate(
+        item.product,
+        {
+          $inc: {
+            quantity: -item.quantity,
+          },
+        }
+      );
     }
 
     await Purchase.findByIdAndDelete(req.params.id);
+
+    // STAFF ACTIVITY
+    await logActivity({
+      userId: req.user?._id,
+      staffName: req.user?.name,
+      staffEmail: req.user?.email,
+      module: "Purchase",
+      action: "DELETE",
+      description: `Deleted purchase ${purchase.invoiceNumber}`,
+      recordId: purchase._id,
+      recordType: "Purchase",
+      invoiceNumber: purchase.invoiceNumber,
+      amount: purchase.totalAmount,
+      endpoint: req.originalUrl,
+      method: req.method,
+      metadata: {
+        supplier: purchase.supplier,
+        stockReversed: true,
+      },
+    });
 
     res.status(200).json({
       message: "Purchase deleted successfully",

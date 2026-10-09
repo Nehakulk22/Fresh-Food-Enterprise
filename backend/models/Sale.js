@@ -1,3 +1,4 @@
+//sales
 const mongoose = require("mongoose");
 
 const saleItemSchema = new mongoose.Schema(

@@ -1,3 +1,4 @@
+//activity logger
 const Activity = require("../models/StaffActivity");
 
 const logActivity = async ({
