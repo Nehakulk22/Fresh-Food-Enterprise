@@ -10,6 +10,15 @@ const {
   deleteCustomer,
 } = require("../controllers/customerController");
 
+<<<<<<< Updated upstream
+=======
+const optionalAuth = require("../middleware/optionalAuth");
+
+// Optional authentication lets us identify the staff member
+// when a JWT is available without breaking existing requests.
+router.use(optionalAuth);
+
+>>>>>>> Stashed changes
 // Get all customers
 router.get("/", getCustomers);
 

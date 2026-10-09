@@ -15,10 +15,37 @@ function Customers() {
     notes: "",
   });
 
+<<<<<<< Updated upstream
   const fetchCustomers = async () => {
     try {
       const response = await fetch(
         "http://localhost:8000/api/customers"
+=======
+  // ======================================================
+  // GET AUTH HEADERS
+  // ======================================================
+
+  const getHeaders = () => {
+    const token = localStorage.getItem("token");
+
+    return {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+  };
+
+  // ======================================================
+  // FETCH CUSTOMERS
+  // ======================================================
+
+  const fetchCustomers = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/customers",
+        {
+          headers: getHeaders(),
+        }
+>>>>>>> Stashed changes
       );
 
       const data = await response.json();
@@ -40,6 +67,13 @@ function Customers() {
     fetchCustomers();
   }, []);
 
+<<<<<<< Updated upstream
+=======
+  // ======================================================
+  // HANDLE FORM CHANGE
+  // ======================================================
+
+>>>>>>> Stashed changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -47,6 +81,13 @@ function Customers() {
     });
   };
 
+<<<<<<< Updated upstream
+=======
+  // ======================================================
+  // CREATE CUSTOMER
+  // ======================================================
+
+>>>>>>> Stashed changes
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -55,9 +96,13 @@ function Customers() {
         "http://localhost:8000/api/customers",
         {
           method: "POST",
+<<<<<<< Updated upstream
           headers: {
             "Content-Type": "application/json",
           },
+=======
+          headers: getHeaders(),
+>>>>>>> Stashed changes
           body: JSON.stringify({
             ...formData,
             openingBalance:
@@ -85,6 +130,10 @@ function Customers() {
       });
 
       setShowForm(false);
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
       fetchCustomers();
     } catch (error) {
       console.error("Create customer error:", error);
@@ -92,6 +141,13 @@ function Customers() {
     }
   };
 
+<<<<<<< Updated upstream
+=======
+  // ======================================================
+  // DELETE CUSTOMER
+  // ======================================================
+
+>>>>>>> Stashed changes
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this customer?"
@@ -106,6 +162,10 @@ function Customers() {
         `http://localhost:8000/api/customers/${id}`,
         {
           method: "DELETE",
+<<<<<<< Updated upstream
+=======
+          headers: getHeaders(),
+>>>>>>> Stashed changes
         }
       );
 
@@ -125,6 +185,13 @@ function Customers() {
     }
   };
 
+<<<<<<< Updated upstream
+=======
+  // ======================================================
+  // UI
+  // ======================================================
+
+>>>>>>> Stashed changes
   return (
     <div className="customers-page">
 

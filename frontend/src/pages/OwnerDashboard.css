@@ -349,4 +349,144 @@
   .quick-actions {
     grid-template-columns: repeat(2, 1fr);
   }
+<<<<<<< Updated upstream
+=======
+}
+/* ==========================================
+   PAYMENT DASHBOARD
+========================================== */
+
+.payment-dashboard-section {
+  margin-top: 25px;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 22px;
+  border: 1px solid #e5e5e5;
+}
+
+.payment-dashboard-section
+.section-header {
+  margin-bottom: 20px;
+}
+
+.payment-dashboard-section
+.section-header p {
+  margin-top: 5px;
+  color: #777;
+  font-size: 14px;
+}
+
+.payment-dashboard-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, 1fr);
+  gap: 18px;
+}
+
+.payment-dashboard-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #e5e5e5;
+  background: #fafafa;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.payment-dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.payment-dashboard-card span {
+  display: block;
+  color: #666;
+  font-size: 14px;
+}
+
+.payment-dashboard-card h2 {
+  margin: 7px 0;
+  font-size: 23px;
+}
+
+.payment-dashboard-card small {
+  color: #888;
+}
+
+.payment-dashboard-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eeeeee;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.received-card {
+  border-left: 4px solid #198754;
+}
+
+.paid-card {
+  border-left: 4px solid #dc3545;
+}
+
+.balance-card {
+  border-left: 4px solid #0d6efd;
+}
+
+
+/* ==========================================
+   PAYMENT BADGES
+========================================== */
+
+.payment-received-badge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 15px;
+  background: #d1e7dd;
+  color: #0f5132;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.payment-paid-badge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 15px;
+  background: #f8d7da;
+  color: #842029;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* ==========================================
+   RESPONSIVE PAYMENT DASHBOARD
+========================================== */
+
+@media (max-width: 900px) {
+
+  .payment-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .payment-dashboard-section {
+    padding: 15px;
+  }
+
+  .payment-dashboard-card {
+    padding: 15px;
+  }
+
+>>>>>>> Stashed changes
 }

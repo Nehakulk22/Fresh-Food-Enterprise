@@ -7,21 +7,22 @@ const {
     login
 } = require("../controllers/authController");
 
-
-// Register first owner
+// =====================================
+// OWNER REGISTRATION
+// =====================================
 
 router.post(
     "/register-owner",
     registerOwner
 );
 
-
-// Login
+// =====================================
+// LOGIN
+// =====================================
 
 router.post(
     "/login",
     login
 );
-
 
 module.exports = router;
