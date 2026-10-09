@@ -10,6 +10,12 @@ const {
   deleteCustomer,
 } = require("../controllers/customerController");
 
+const optionalAuth = require("../middleware/optionalAuth");
+
+// Optional authentication lets us identify the staff member
+// when a JWT is available without breaking existing requests.
+router.use(optionalAuth);
+
 // Get all customers
 router.get("/", getCustomers);
 

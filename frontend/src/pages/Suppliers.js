@@ -15,10 +15,37 @@ function Suppliers() {
     notes: "",
   });
 
+<<<<<<< Updated upstream
   const fetchSuppliers = async () => {
     try {
       const response = await fetch(
         "http://localhost:8000/api/suppliers"
+=======
+  // ======================================================
+  // AUTH HEADERS
+  // ======================================================
+
+  const getHeaders = () => {
+    const token = localStorage.getItem("token");
+
+    return {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+  };
+
+  // ======================================================
+  // FETCH SUPPLIERS
+  // ======================================================
+
+  const fetchSuppliers = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/suppliers",
+        {
+          headers: getHeaders(),
+        }
+>>>>>>> Stashed changes
       );
 
       const data = await response.json();
@@ -40,6 +67,13 @@ function Suppliers() {
     fetchSuppliers();
   }, []);
 
+<<<<<<< Updated upstream
+=======
+  // ======================================================
+  // HANDLE CHANGE
+  // ======================================================
+
+>>>>>>> Stashed changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -47,6 +81,13 @@ function Suppliers() {
     });
   };
 
+<<<<<<< Updated upstream
+=======
+  // ======================================================
+  // CREATE SUPPLIER
+  // ======================================================
+
+>>>>>>> Stashed changes
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -55,9 +96,13 @@ function Suppliers() {
         "http://localhost:8000/api/suppliers",
         {
           method: "POST",
+<<<<<<< Updated upstream
           headers: {
             "Content-Type": "application/json",
           },
+=======
+          headers: getHeaders(),
+>>>>>>> Stashed changes
           body: JSON.stringify({
             ...formData,
             openingBalance:
@@ -85,6 +130,10 @@ function Suppliers() {
       });
 
       setShowForm(false);
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
       fetchSuppliers();
     } catch (error) {
       console.error("Create supplier error:", error);
@@ -92,6 +141,13 @@ function Suppliers() {
     }
   };
 
+<<<<<<< Updated upstream
+=======
+  // ======================================================
+  // DELETE SUPPLIER
+  // ======================================================
+
+>>>>>>> Stashed changes
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this supplier?"
@@ -106,6 +162,10 @@ function Suppliers() {
         `http://localhost:8000/api/suppliers/${id}`,
         {
           method: "DELETE",
+<<<<<<< Updated upstream
+=======
+          headers: getHeaders(),
+>>>>>>> Stashed changes
         }
       );
 

@@ -1,6 +1,15 @@
 const Supplier = require("../models/Supplier");
+<<<<<<< Updated upstream
 
 // GET ALL SUPPLIERS
+=======
+const logActivity = require("../utils/activityLogger");
+
+// ==========================================
+// GET ALL SUPPLIERS
+// ==========================================
+
+>>>>>>> Stashed changes
 const getSuppliers = async (req, res) => {
   try {
     const suppliers = await Supplier.find({
@@ -19,7 +28,14 @@ const getSuppliers = async (req, res) => {
   }
 };
 
+<<<<<<< Updated upstream
 // GET SINGLE SUPPLIER
+=======
+// ==========================================
+// GET SINGLE SUPPLIER
+// ==========================================
+
+>>>>>>> Stashed changes
 const getSupplierById = async (req, res) => {
   try {
     const supplier = await Supplier.findById(
@@ -42,7 +58,14 @@ const getSupplierById = async (req, res) => {
   }
 };
 
+<<<<<<< Updated upstream
 // CREATE SUPPLIER
+=======
+// ==========================================
+// CREATE SUPPLIER
+// ==========================================
+
+>>>>>>> Stashed changes
 const createSupplier = async (req, res) => {
   try {
     const {
@@ -69,6 +92,31 @@ const createSupplier = async (req, res) => {
       notes,
     });
 
+<<<<<<< Updated upstream
+=======
+    // ==========================================
+    // STAFF ACTIVITY
+    // ==========================================
+
+    await logActivity({
+      userId: req.user?._id,
+      staffName: req.user?.name,
+      staffEmail: req.user?.email,
+      module: "Supplier",
+      action: "CREATE",
+      description: `Created supplier ${supplier.name}`,
+      recordId: supplier._id,
+      recordType: "Supplier",
+      endpoint: req.originalUrl,
+      method: req.method,
+      metadata: {
+        phone: supplier.phone,
+        email: supplier.email,
+        openingBalance: supplier.openingBalance,
+      },
+    });
+
+>>>>>>> Stashed changes
     res.status(201).json({
       message: "Supplier created successfully",
       supplier,
@@ -82,7 +130,14 @@ const createSupplier = async (req, res) => {
   }
 };
 
+<<<<<<< Updated upstream
 // UPDATE SUPPLIER
+=======
+// ==========================================
+// UPDATE SUPPLIER
+// ==========================================
+
+>>>>>>> Stashed changes
 const updateSupplier = async (req, res) => {
   try {
     const supplier = await Supplier.findById(
@@ -114,6 +169,31 @@ const updateSupplier = async (req, res) => {
 
     await supplier.save();
 
+<<<<<<< Updated upstream
+=======
+    // ==========================================
+    // STAFF ACTIVITY
+    // ==========================================
+
+    await logActivity({
+      userId: req.user?._id,
+      staffName: req.user?.name,
+      staffEmail: req.user?.email,
+      module: "Supplier",
+      action: "UPDATE",
+      description: `Updated supplier ${supplier.name}`,
+      recordId: supplier._id,
+      recordType: "Supplier",
+      endpoint: req.originalUrl,
+      method: req.method,
+      metadata: {
+        phone: supplier.phone,
+        email: supplier.email,
+        openingBalance: supplier.openingBalance,
+      },
+    });
+
+>>>>>>> Stashed changes
     res.status(200).json({
       message: "Supplier updated successfully",
       supplier,
@@ -127,7 +207,14 @@ const updateSupplier = async (req, res) => {
   }
 };
 
+<<<<<<< Updated upstream
 // DELETE SUPPLIER
+=======
+// ==========================================
+// DELETE SUPPLIER
+// ==========================================
+
+>>>>>>> Stashed changes
 const deleteSupplier = async (req, res) => {
   try {
     const supplier = await Supplier.findById(
@@ -144,6 +231,26 @@ const deleteSupplier = async (req, res) => {
 
     await supplier.save();
 
+<<<<<<< Updated upstream
+=======
+    // ==========================================
+    // STAFF ACTIVITY
+    // ==========================================
+
+    await logActivity({
+      userId: req.user?._id,
+      staffName: req.user?.name,
+      staffEmail: req.user?.email,
+      module: "Supplier",
+      action: "DELETE",
+      description: `Deleted supplier ${supplier.name}`,
+      recordId: supplier._id,
+      recordType: "Supplier",
+      endpoint: req.originalUrl,
+      method: req.method,
+    });
+
+>>>>>>> Stashed changes
     res.status(200).json({
       message: "Supplier deleted successfully",
     });
@@ -156,6 +263,13 @@ const deleteSupplier = async (req, res) => {
   }
 };
 
+<<<<<<< Updated upstream
+=======
+// ==========================================
+// EXPORTS
+// ==========================================
+
+>>>>>>> Stashed changes
 module.exports = {
   getSuppliers,
   getSupplierById,

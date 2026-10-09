@@ -1,4 +1,8 @@
 const Customer = require("../models/Customer");
+<<<<<<< Updated upstream
+=======
+const logActivity = require("../controllers/activityController");
+>>>>>>> Stashed changes
 
 // GET ALL CUSTOMERS
 const getCustomers = async (req, res) => {
@@ -69,6 +73,27 @@ const createCustomer = async (req, res) => {
       notes,
     });
 
+<<<<<<< Updated upstream
+=======
+    // Staff Activity
+    await logActivity({
+      userId: req.user?._id,
+      staffName: req.user?.name,
+      staffEmail: req.user?.email,
+      module: "Customer",
+      action: "CREATE",
+      description: `Created customer ${customer.name}`,
+      recordId: customer._id,
+      recordType: "Customer",
+      endpoint: req.originalUrl,
+      method: req.method,
+      metadata: {
+        phone: customer.phone,
+        email: customer.email,
+      },
+    });
+
+>>>>>>> Stashed changes
     res.status(201).json({
       message: "Customer created successfully",
       customer,
@@ -114,6 +139,23 @@ const updateCustomer = async (req, res) => {
 
     await customer.save();
 
+<<<<<<< Updated upstream
+=======
+    // Staff Activity
+    await logActivity({
+      userId: req.user?._id,
+      staffName: req.user?.name,
+      staffEmail: req.user?.email,
+      module: "Customer",
+      action: "UPDATE",
+      description: `Updated customer ${customer.name}`,
+      recordId: customer._id,
+      recordType: "Customer",
+      endpoint: req.originalUrl,
+      method: req.method,
+    });
+
+>>>>>>> Stashed changes
     res.status(200).json({
       message: "Customer updated successfully",
       customer,
@@ -144,6 +186,23 @@ const deleteCustomer = async (req, res) => {
 
     await customer.save();
 
+<<<<<<< Updated upstream
+=======
+    // Staff Activity
+    await logActivity({
+      userId: req.user?._id,
+      staffName: req.user?.name,
+      staffEmail: req.user?.email,
+      module: "Customer",
+      action: "DELETE",
+      description: `Deleted customer ${customer.name}`,
+      recordId: customer._id,
+      recordType: "Customer",
+      endpoint: req.originalUrl,
+      method: req.method,
+    });
+
+>>>>>>> Stashed changes
     res.status(200).json({
       message: "Customer deleted successfully",
     });

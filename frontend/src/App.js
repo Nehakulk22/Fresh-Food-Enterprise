@@ -17,6 +17,13 @@ import Suppliers from "./pages/Suppliers";
 import Products from "./pages/Products";
 import Sales from "./pages/Sales";
 import Purchases from "./pages/Purchases";
+<<<<<<< Updated upstream
+=======
+import Payments from "./pages/Payments";
+import Reports from "./pages/Reports";
+import Staff from "./pages/Staff";
+import Settings from "./components/Settings";
+>>>>>>> Stashed changes
 
 import "./components/auth/Auth.css";
 
@@ -29,6 +36,11 @@ import "./pages/Suppliers.css";
 import "./pages/Products.css";
 import "./pages/Sales.css";
 import "./pages/Purchases.css";
+<<<<<<< Updated upstream
+=======
+import "./pages/Payments.css";
+import "./components/Settings.css";
+>>>>>>> Stashed changes
 
 function App() {
   const [user, setUser] = useState(
@@ -50,7 +62,13 @@ function App() {
     <BrowserRouter>
       <Routes>
 
+<<<<<<< Updated upstream
         {/* LOGIN */}
+=======
+        {/* =====================================================
+            LOGIN
+        ====================================================== */}
+>>>>>>> Stashed changes
         <Route
           path="/login"
           element={
@@ -64,7 +82,13 @@ function App() {
           }
         />
 
+<<<<<<< Updated upstream
         {/* SIGNUP */}
+=======
+        {/* =====================================================
+            SIGNUP
+        ====================================================== */}
+>>>>>>> Stashed changes
         <Route
           path="/signup"
           element={
@@ -76,7 +100,13 @@ function App() {
           }
         />
 
+<<<<<<< Updated upstream
         {/* LOGGED-IN PAGES */}
+=======
+        {/* =====================================================
+            LOGGED-IN PAGES
+        ====================================================== */}
+>>>>>>> Stashed changes
         {user ? (
           <Route
             element={
@@ -86,6 +116,7 @@ function App() {
               />
             }
           >
+<<<<<<< Updated upstream
             <Route
               path="/dashboard"
               element={
@@ -125,10 +156,77 @@ function App() {
               element={
                 <ModuleComingSoon
                   title="Payments"
+=======
+
+            {/* DASHBOARD */}
+            <Route
+              path="/dashboard"
+              element={
+                <OwnerDashboard user={user} />
+              }
+            />
+
+            {/* CUSTOMERS */}
+            <Route
+              path="/customers"
+              element={<Customers />}
+            />
+
+            {/* SUPPLIERS */}
+            <Route
+              path="/suppliers"
+              element={<Suppliers />}
+            />
+
+            {/* PRODUCTS */}
+            <Route
+              path="/products"
+              element={<Products />}
+            />
+
+            {/* SALES */}
+            <Route
+              path="/sales"
+              element={<Sales />}
+            />
+
+            {/* PURCHASES */}
+            <Route
+              path="/purchases"
+              element={<Purchases />}
+            />
+
+            {/* PAYMENTS */}
+            <Route
+              path="/payments"
+              element={<Payments />}
+            />
+
+            {/* REPORTS */}
+            <Route
+              path="/reports"
+              element={<Reports />}
+            />
+
+            {/* STAFF */}
+            <Route
+              path="/staff"
+              element={<Staff />}
+            />
+
+            {/* SETTINGS */}
+            <Route
+              path="/settings"
+              element={
+                <Settings
+                  user={user}
+                  onLogin={handleLogin}
+>>>>>>> Stashed changes
                 />
               }
             />
 
+<<<<<<< Updated upstream
             <Route
               path="/reports"
               element={
@@ -158,6 +256,13 @@ function App() {
           </Route>
         ) : (
           /* NOT LOGGED IN */
+=======
+          </Route>
+        ) : (
+          /* =====================================================
+             NOT LOGGED IN
+          ====================================================== */
+>>>>>>> Stashed changes
           <Route
             path="*"
             element={
@@ -169,7 +274,13 @@ function App() {
           />
         )}
 
+<<<<<<< Updated upstream
         {/* FALLBACK */}
+=======
+        {/* =====================================================
+            FALLBACK
+        ====================================================== */}
+>>>>>>> Stashed changes
         <Route
           path="*"
           element={
@@ -182,6 +293,7 @@ function App() {
 
       </Routes>
     </BrowserRouter>
+<<<<<<< Updated upstream
   );
 }
 
@@ -224,6 +336,8 @@ function ModuleComingSoon({ title }) {
         </p>
       </div>
     </div>
+=======
+>>>>>>> Stashed changes
   );
 }
 
